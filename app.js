@@ -268,7 +268,6 @@ canvas.addEventListener('click', function(e) {
     if (isPlaying) {
         board.tagAudio.play();
         let xPos, yPos;
-        ID = (ID+1)%3 || 1;
         for (let i=0; i<BOARD_SIZE; i++) {
             if (e.pageX>=this.offsetLeft+(BLOCK_SIZE*i) && e.pageX<=this.offsetLeft+(BLOCK_SIZE*(i+1))) {
                 xPos = i;
@@ -278,6 +277,7 @@ canvas.addEventListener('click', function(e) {
             }
         }
         if (board.grid[yPos][xPos] === EMPTY_ID) {
+            ID = (ID+1)%3 || 1;
             if (win === 0 || win === 1) {
                 board.updateBoard(xPos, yPos, ID);
             }
