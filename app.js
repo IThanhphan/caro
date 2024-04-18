@@ -163,7 +163,8 @@ class Board {
     checkMainDiagonal(md, id) {
         let pre = (md-BOARD_SIZE+1<=0) ? 0 : md-BOARD_SIZE+1;
         let count = 0;
-        for (let cur=pre; cur<BOARD_SIZE; cur++) {
+        let end = (BOARD_SIZE>md) ? md+1 : BOARD_SIZE;
+        for (let cur=pre; cur<end; cur++) {
             console.log(`MainDiagonal ${md}:`, cur, cur-md+BOARD_SIZE-1);
             if (this.grid[cur][cur-md+BOARD_SIZE-1]===id) {
                 count++;
@@ -181,7 +182,8 @@ class Board {
     checkSecondaryDiagonal(sd, id) {
         let pre = (sd-BOARD_SIZE+1<=0) ? 0 : sd-BOARD_SIZE+1;
         let count = 0;
-        for (let cur=pre; cur<BOARD_SIZE; cur++) {
+        let end = (BOARD_SIZE>sd) ? sd+1 : BOARD_SIZE;
+        for (let cur=pre; cur<end; cur++) {
             console.log(`SecondaryDiagonal ${sd}:`, sd-cur, cur);
             if (this.grid[sd-cur][cur]===id) {
                 count++;
