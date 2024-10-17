@@ -6,7 +6,7 @@ let ID=0;
 let win=0;
 let isPlaying = 0;
 
-const BOARD_SIZE = 9;
+const BOARD_SIZE = 3;
 const BLOCK_SIZE = 100;
 const FONT_SIZE = 70;
 const ITEMS = [' ', 'x', 'o'];
@@ -80,6 +80,7 @@ class Board {
         this.ctx.fillText(text, (x*BLOCK_SIZE)+(BLOCK_SIZE/2), (y*BLOCK_SIZE)+FONT_SIZE);
         this.ctx.textAlign = 'center';
         this.ctx.fillStyle = 'black';
+        this.ctx.lineWidth = 2;
         this.ctx.strokeRect(x*BLOCK_SIZE, y*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
     }
 
@@ -163,8 +164,7 @@ class Board {
     checkMainDiagonal(md, id) {
         let pre = (md-BOARD_SIZE+1<=0) ? 0 : md-BOARD_SIZE+1;
         let count = 0;
-        let end = (BOARD_SIZE>md) ? md+1 : BOARD_SIZE;
-        for (let cur=pre; cur<end; cur++) {
+        for (let cur=pre; cur<BOARD_SIZE; cur++) {
             console.log(`MainDiagonal ${md}:`, cur, cur-md+BOARD_SIZE-1);
             if (this.grid[cur][cur-md+BOARD_SIZE-1]===id) {
                 count++;
@@ -182,8 +182,7 @@ class Board {
     checkSecondaryDiagonal(sd, id) {
         let pre = (sd-BOARD_SIZE+1<=0) ? 0 : sd-BOARD_SIZE+1;
         let count = 0;
-        let end = (BOARD_SIZE>sd) ? sd+1 : BOARD_SIZE;
-        for (let cur=pre; cur<end; cur++) {
+        for (let cur=pre; cur<BOARD_SIZE; cur++) {
             console.log(`SecondaryDiagonal ${sd}:`, sd-cur, cur);
             if (this.grid[sd-cur][cur]===id) {
                 count++;
@@ -288,12 +287,14 @@ canvas.addEventListener('click', function(e) {
             } 
             if (win === 1) {
                 win++;
-                board.drawCell(xPos, yPos, ID);
+                board.grid[yPos][xPos] = ID;
+                board.drawBoard();
                 winner.innerText = `Player ${ITEMS[ID]} win!!!`;
                 board.victoryAudio.play();
                 isPlaying = 0;
             } else if (win === 0) {
-                board.drawCell(xPos, yPos, ID); 
+                board.grid[yPos][xPos] = ID;
+                board.drawBoard();
                 if (board.notEmpty()) {
                     winner.innerText = 'Draw!!!';
                     board.drawAudio.play();
