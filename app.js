@@ -5,17 +5,16 @@ let winner = document.querySelector('.winner');
 let ID=0;
 let win=0;
 let isPlaying = 0;
+let BOARD_SIZE = 3;
+let MINIMUM_ITEM = (BOARD_SIZE>5) ? 5 : 3;
 
-const BOARD_SIZE = 3;
 const BLOCK_SIZE = 100;
 const FONT_SIZE = 70;
 const ITEMS = [' ', 'x', 'o'];
 const EMPTY_ID = 0;
-const MINIMUM_ITEM = (BOARD_SIZE>5) ? 5 : 3;
+
 const canvas = document.getElementById('board');
 const ctx = canvas.getContext('2d');
-
-container.setAttribute('style',`grid-template-columns: ${BOARD_SIZE * BLOCK_SIZE}px 200px`);
 
 class Board {
     constructor(ctx) {
@@ -43,15 +42,19 @@ class Board {
     }
 
     generateWhiteBoard() {
-        return Array.from({length: BOARD_SIZE}, () => Array(BOARD_SIZE).fill(EMPTY_ID));
+        return Array.from({length: BOARD_SIZE}, () => Array.from({length: BOARD_SIZE}, () => EMPTY_ID));
     }
 
     reset() {
+        
         winner.innerText = '';
         win = 0;
         ID = 0;
         this.ctx.canvas.width = BOARD_SIZE * BLOCK_SIZE;
         this.ctx.canvas.height = BOARD_SIZE * BLOCK_SIZE;
+
+        this.straightLine = Array.from({length: BOARD_SIZE}, () => EMPTY_ID);
+        this.diagonalLine = Array.from({length: 2*BOARD_SIZE-1}, () => EMPTY_ID);
 
         this.columnX = [...this.straightLine];
         this.rowX = [...this.straightLine];
@@ -70,7 +73,7 @@ class Board {
                 this.ctx.clearRect(row*BLOCK_SIZE+1, col*BLOCK_SIZE+1, BLOCK_SIZE-1, BLOCK_SIZE-1);
             }
         }
-        
+        console.log(BOARD_SIZE);
     }
 
     drawCell(x, y, itemId) {
@@ -85,6 +88,8 @@ class Board {
     }
 
     drawBoard() {
+        console.log(this.grid);
+        container.setAttribute('style',`grid-template-columns: ${BOARD_SIZE * BLOCK_SIZE}px 200px`);
         for (let row=0; row<this.grid.length; row++) {
             for (let col=0; col<this.grid[0].length; col++) {
                 this.drawCell(col, row, this.grid[row][col]);
@@ -160,10 +165,9 @@ class Board {
         }
         return false;
     }
-
-    checkMainDiagonal(md, id) {
+    checkMainDiagonal(md, id) {       
         let pre = (md-BOARD_SIZE+1<=0) ? 0 : md-BOARD_SIZE+1;
-        let count = 0;
+        let count = 0;     
         for (let cur=pre; cur<BOARD_SIZE; cur++) {
             console.log(`MainDiagonal ${md}:`, cur, cur-md+BOARD_SIZE-1);
             if (this.grid[cur][cur-md+BOARD_SIZE-1]===id) {
@@ -213,6 +217,7 @@ class Board {
             }
             for (let j=0; j<2*BOARD_SIZE-1; j++) {
                 if (this.main_diagonalX[j]>=MINIMUM_ITEM) {
+                    console.log(this.main_diagonalX);
                     if (this.checkMainDiagonal(j, itemId)) {                 
                         return true;
                     }
@@ -307,10 +312,9 @@ canvas.addEventListener('click', function(e) {
 
 play_btn.addEventListener('click', function(e) {
     isPlaying = 1;
+    BOARD_SIZE = parseInt(inputDifficult.value, 10);
+    MINIMUM_ITEM = (BOARD_SIZE>5) ? 5 : 3;
     board.reset();
 })
-
-
-
 
 
